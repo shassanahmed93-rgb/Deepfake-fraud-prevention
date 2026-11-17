@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "Explainable fraud triage MVP for user-submitted communications",
-  "scripts": { "start": "node server/index.js", "check": "node --check server/index.js && node --check server/scoring.js && node --check public/app.js" },
-  "engines": { "node": ">=20" }
+  "scripts": {
+    "start": "node server/index.js",
+    "check": "node --check server/index.js && node --check server/scoring.js && node --check server/security.js && node --check public/app.js && npm test",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
 }
