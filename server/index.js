@@ -4,7 +4,8 @@ const seed=[{id:'case-1042',title:'Urgent supplier bank change',channel:'Email',
 async function load(){await mkdir(DATA,{recursive:true});if(!existsSync(CASES))await writeFile(CASES,JSON.stringify(seed,null,2));return JSON.parse(await readFile(CASES,'utf8'))}
 async function body(req){let chunks=[],n=0;for await(const c of req){n+=c.length;if(n>MAX)throw Object.assign(Error('Request too large'),{status:413});chunks.push(c)}try{return JSON.parse(Buffer.concat(chunks).toString())}catch{throw Object.assign(Error('Expected valid JSON'),{status:400})}}
 function reply(res,status,data){res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(data))}
-const uApi=p=>String(p||'').startsWith('/api/');\nconst clean=s=>String(s||'').replace(/[<>\r\n]/g,' ').trim().slice(0,90);
+const uApi=p=>String(p||'').startsWith('/api/');
+const clean=s=>String(s||'').replace(/[<>\r\n]/g,' ').trim().slice(0,90);
 http.createServer(async(req,res)=>{try{if(!originAllowed(req))return reply(res,403,{error:'Cross-origin request blocked'});if(!rateLimit(req,res,{limit:req.method==='POST'||req.method==='PATCH'?20:120}))return reply(res,429,{error:'Rate limit exceeded'});const u=new URL(req.url,'http://localhost');
 if(req.method==='GET'&&u.pathname==='/api/health')return reply(res,200,{status:'ok',mode:process.env.NODE_ENV==='production'?'production':'local-demo',detector:'transparent-rules-only',readiness:readiness()});
 if(req.method==='GET'&&u.pathname==='/api/connectors')return reply(res,200,{connectors:plannedConnectors});
