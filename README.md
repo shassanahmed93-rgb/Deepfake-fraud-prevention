@@ -9,7 +9,7 @@ A local fraud triage MVP focused on social engineering, impersonation, and safe 
 - Dark, responsive dashboard with seeded demonstration cases.
 - Explainable text triage for submitted email, SMS, and message content.
 - Case creation, search/filter, and human-managed status workflow.
-- Audio/video metadata-only intake and safe verification guidance. No media bytes are uploaded and no deepfake classifier or provenance validator is currently integrated.
+- Audio/video metadata-only intake and safe verification guidance.
 - Connector registry and roadmap for authorized integrations.
 - Privacy and safety guidance in the UI.
 
