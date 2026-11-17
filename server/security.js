@@ -1,0 +1,4 @@
+const buckets=new Map();
+export function rateLimit(req,res,{limit=60,windowMs=60000}={}){const key=req.socket.remoteAddress||'unknown',now=Date.now();let b=buckets.get(key);if(!b||now-b.start>=windowMs)b={start:now,count:0};b.count++;buckets.set(key,b);res.setHeader('ratelimit-limit',String(limit));res.setHeader('ratelimit-remaining',String(Math.max(0,limit-b.count)));if(b.count>limit){res.setHeader('retry-after',String(Math.ceil((windowMs-(now-b.start))/1000)));return false}if(buckets.size>10000)for(const[k,v]of buckets)if(now-v.start>windowMs)buckets.delete(k);return true}
+export function originAllowed(req){const origin=req.headers.origin;if(!origin)return true;try{return new URL(origin).host===req.headers.host}catch{return false}}
+export function safeEqual(a,b){if(typeof a!=='string'||typeof b!=='string'||a.length!==b.length)return false;let diff=0;for(let i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);return diff===0}
