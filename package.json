@@ -1,0 +1,9 @@
+{
+  "name": "deepfake-fraud-prevention",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Explainable fraud triage MVP for user-submitted communications",
+  "scripts": { "start": "node server/index.js", "check": "node --check server/index.js && node --check server/scoring.js && node --check public/app.js" },
+  "engines": { "node": ">=20" }
+}
