@@ -1,11 +1,11 @@
-import http from 'node:http';import{readFile,writeFile,mkdir}from'node:fs/promises';import{existsSync}from'node:fs';import{extname,join,normalize}from'node:path';import{fileURLToPath}from'node:url';import{randomUUID}from'node:crypto';import{analyzeText}from'./scoring.js';import{plannedConnectors}from'./connectors.js';
+import http from 'node:http';import{readFile,writeFile,mkdir}from'node:fs/promises';import{existsSync}from'node:fs';import{extname,join,normalize}from'node:path';import{fileURLToPath}from'node:url';import{randomUUID}from'node:crypto';import{analyzeText}from'./scoring.js';import{plannedConnectors}from'./connectors.js';import{rateLimit,originAllowed}from'./security.js';
 const ROOT=fileURLToPath(new URL('../',import.meta.url)),DATA=join(ROOT,'data'),CASES=join(DATA,'cases.json'),PORT=Number(process.env.PORT||3000),MAX=1500000;
 const seed=[{id:'case-1042',title:'Urgent supplier bank change',channel:'Email',level:'high',score:77,status:'Under review',createdAt:'2026-11-17T08:25:00Z',findings:['Urgent pressure','Payment request','Link included'],summary:'Urgent bank change request.'}];
 async function load(){await mkdir(DATA,{recursive:true});if(!existsSync(CASES))await writeFile(CASES,JSON.stringify(seed,null,2));return JSON.parse(await readFile(CASES,'utf8'))}
 async function body(req){let chunks=[],n=0;for await(const c of req){n+=c.length;if(n>MAX)throw Object.assign(Error('Request too large'),{status:413});chunks.push(c)}try{return JSON.parse(Buffer.concat(chunks).toString())}catch{throw Object.assign(Error('Expected valid JSON'),{status:400})}}
 function reply(res,status,data){res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(data))}
 const clean=s=>String(s||'').replace(/[<>\r\n]/g,' ').trim().slice(0,90);
-http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://localhost');
+http.createServer(async(req,res)=>{try{if(!originAllowed(req))return reply(res,403,{error:'Cross-origin request blocked'});if(!rateLimit(req,res,{limit:req.method==='POST'||req.method==='PATCH'?20:120}))return reply(res,429,{error:'Rate limit exceeded'});const u=new URL(req.url,'http://localhost');
 if(req.method==='GET'&&u.pathname==='/api/health')return reply(res,200,{status:'ok',mode:'local-demo',detector:'transparent-rules-only'});
 if(req.method==='GET'&&u.pathname==='/api/connectors')return reply(res,200,{connectors:plannedConnectors});
 if(req.method==='GET'&&u.pathname==='/api/cases')return reply(res,200,{cases:await load()});
