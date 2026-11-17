@@ -60,3 +60,8 @@ Before real use, add SSO/MFA and tenant authorization; replace JSON storage with
 ## License
 
 No license has been selected yet.
+
+
+## Triage evaluation
+
+Run `npm run evaluate` to generate a confusion matrix, high-risk precision/recall, and accuracy for `evaluation/fixtures.json`. The bundled examples are synthetic smoke fixtures only and must not be presented as real-world performance. To evaluate a real deployment, provide a consented, representative, independently labeled and held-out corpus that includes benign communications, multiple languages/channels, common benign transformations, and varied attack examples. Review false positives and false negatives separately. Do not tune and report on the same samples.
