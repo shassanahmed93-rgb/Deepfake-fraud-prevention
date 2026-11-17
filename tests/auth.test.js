@@ -1,0 +1,4 @@
+import test from'node:test';import assert from'node:assert/strict';import{authorize,authEnabled,readiness}from'../server/auth.js';
+test('development mode remains usable locally',()=>{delete process.env.NODE_ENV;assert.equal(authEnabled(),false);assert.equal(authorize({headers:{}}),true)});
+test('production fails closed without configured key',()=>{process.env.NODE_ENV='production';delete process.env.SENTINEL_API_KEY;assert.equal(authorize({headers:{}}),false);assert.equal(readiness().auth,'misconfigured')});
+test('production accepts only exact bearer secret',()=>{process.env.SENTINEL_API_KEY='x'.repeat(40);assert.equal(authorize({headers:{authorization:'Bearer '+'x'.repeat(40)}}),true);assert.equal(authorize({headers:{authorization:'Bearer wrong'}}),false);delete process.env.NODE_ENV;delete process.env.SENTINEL_API_KEY});
