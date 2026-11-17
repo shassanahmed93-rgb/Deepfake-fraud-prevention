@@ -1,5 +1,7 @@
 # Deepfake Fraud Prevention
 
+> **Current capability:** this MVP does not detect deepfakes. It applies transparent text-pattern rules to user-submitted messages and offers metadata-only media intake. It cannot determine whether audio, video, or images are authentic.
+
 A local fraud triage MVP focused on social engineering, impersonation, and safe verification. This project uses transparent indicators to prioritize human review; it does not claim to reliably detect every deepfake or determine authenticity.
 
 ## What works
@@ -7,7 +9,7 @@ A local fraud triage MVP focused on social engineering, impersonation, and safe 
 - Dark, responsive dashboard with seeded demonstration cases.
 - Explainable text triage for submitted email, SMS, and message content.
 - Case creation, search/filter, and human-managed status workflow.
-- Audio/video intake metadata validation and safe verification steps. Media bytes are not uploaded or retained, and no authenticity verdict is produced.
+- Audio/video metadata-only intake and safe verification guidance. No media bytes are uploaded and no deepfake classifier or provenance validator is currently integrated.
 - Connector registry and roadmap for authorized integrations.
 - Privacy and safety guidance in the UI.
 
@@ -59,9 +61,24 @@ Before real use, add SSO/MFA and tenant authorization; replace JSON storage with
 
 ## License
 
-No license has been selected yet.
+Licensed under the [MIT License](LICENSE).
 
+
+## Deepfake detection status and path
+
+The current rule-based score measures social-engineering cues in text; it is not a probability of fraud and says nothing about whether media is synthetic. To add actual media detection, choose a supported detector or deploy a reviewed model, implement isolated media upload/processing, and establish an evaluation corpus. Keep outputs as evidence signals with an abstain/unknown outcome, show model version and applicable media types, and route consequential decisions to human review.
+
+A future provenance check (for example, C2PA Content Credentials validation) could report whether attached provenance data validates. Presence does not prove that depicted events are true; absence does not prove synthetic media. Detection and provenance must remain separate signals.
 
 ## Triage evaluation
 
 Run `npm run evaluate` to generate a confusion matrix, high-risk precision/recall, and accuracy for `evaluation/fixtures.json`. The bundled examples are synthetic smoke fixtures only and must not be presented as real-world performance. To evaluate a real deployment, provide a consented, representative, independently labeled and held-out corpus that includes benign communications, multiple languages/channels, common benign transformations, and varied attack examples. Review false positives and false negatives separately. Do not tune and report on the same samples.
+
+
+## Detection evaluation references
+
+- NIST, *Reducing Risks Posed by Synthetic Content* (AI 100-4): https://doi.org/10.6028/NIST.AI.100-4
+- Microsoft Research, *Microsoft-Northwestern-WITNESS Benchmark for Deepfake Detection*: https://www.microsoft.com/en-us/research/publication/the-microsoft-northwestern-witness-benchmark-for-deepfake-detection/
+- C2PA specification and limitations: https://spec.c2pa.org/specifications/ and https://spec.c2pa.org/specifications/specifications/1.4/security/Harms_Modelling.html
+
+Benchmark results vary across generators, channels, and media transformations. Evaluate on consented, held-out, in-the-wild-like samples and report false positives and false negatives by modality and condition. No detector can guarantee every deepfake will be caught.
