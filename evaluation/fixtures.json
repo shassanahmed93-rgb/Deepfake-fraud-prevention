@@ -1,0 +1,27 @@
+[
+  {
+    "label": "high",
+    "text": "Urgent: keep this confidential. Send a gift card immediately.",
+    "note": "Illustrative synthetic example"
+  },
+  {
+    "label": "high",
+    "text": "Your CEO needs a wire transfer today. Do not tell anyone.",
+    "note": "Illustrative synthetic example"
+  },
+  {
+    "label": "elevated",
+    "text": "Please approve this login and text me at my new number.",
+    "note": "Illustrative synthetic example"
+  },
+  {
+    "label": "lower",
+    "text": "The team meeting is scheduled for Thursday at 10.",
+    "note": "Illustrative synthetic example"
+  },
+  {
+    "label": "lower",
+    "text": "Thanks for sending the report. I will review it tomorrow.",
+    "note": "Illustrative synthetic example"
+  }
+]
